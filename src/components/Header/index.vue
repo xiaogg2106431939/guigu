@@ -48,6 +48,12 @@
             keyword:''
             }
         },
+        mounted(){
+            //通过全局事件总线清除关键字
+            this.$bus.$on('clear',()=>{
+                this.keyword = ''
+            })
+        },
         methods: {
             goSearch(){
                 //代表的是如果有query参数也捎带过去

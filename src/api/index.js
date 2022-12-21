@@ -5,7 +5,8 @@ import mockRequest from "./mockAjax"
 
 //三级联动接口
 export const reqCategoryList = ()=> request({url:'/product/getBaseCategoryList',method:'get'})
-
+//获取搜索模块数据,给服务器传递参数至少是空对象
+export const reqGetSearchInfo = (params)=> request({url:'/list',method:'post',data:params})
 
 
 

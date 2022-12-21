@@ -34,7 +34,6 @@ const actions = {
         if (res.code == 200) {
             commit('GETFLOORLIST',res.data)
         }
-        console.log(res);
     }
 
 }

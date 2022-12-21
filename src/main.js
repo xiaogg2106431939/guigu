@@ -10,6 +10,9 @@ Vue.component(TypeNav.name,TypeNav)
 //轮播图--全局组件
 import Carousel from '@/components/Carousel'
 Vue.component(Carousel.name,Carousel)
+//分页--全局组件
+import Pagination from '@/components/Pagination'
+Vue.component(Pagination.name,Pagination)
 
 
 //引入MockServer.js----mock数据,至少让它执行一次
@@ -21,6 +24,9 @@ import 'swiper/swiper-bundle.min.css'
 Vue.config.productionTip = false
 
 new Vue({
+  beforeCreate() {
+    Vue.prototype.$bus = this
+  },
   router,
   store,
   render: h => h(App)
