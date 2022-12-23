@@ -60,6 +60,14 @@ const routes = [
     }
   },
   {
+    path: '/detail/:skuid',
+    name: 'Detail',
+    component: () => import(/* webpackChunkName: "Detail" */ '../views/Detail'),
+    meta:{
+      show:true
+    }
+  },
+  {
     path:'*',
     redirect:'/home'
   }
@@ -68,7 +76,11 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // 始终滚动到顶部
+    return { y: 0 }
+  }
 })
 
 export default router
