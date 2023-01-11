@@ -1,7 +1,11 @@
-import { reqGoodInfo } from "@/api"
+import { reqGoodInfo,reqAddorUpdateShopCart } from "@/api"
+//封装游客身份模块
+import {getUUID} from '@/utils/uuidToken'
 //search模块小仓库
 const state = {
-    goodInfo:{}
+    goodInfo:{},
+    //游客临时身份
+    uuidToken:getUUID()
 }
 
 const mutations = {
@@ -17,6 +21,16 @@ const actions = {
      if (res.code == 200) {
         commit('GETGOODINFO',res.data)
      }
+   },
+   //将产品添加购物车
+   async addOrUpdateShopCart({commit},{skuId,skuNum}){
+    //前台将参数带给服务器即可，服务器未返回任何数据
+    let res = await reqAddorUpdateShopCart(skuId,skuNum)
+    if (res.code == 200) {
+        return 'ok'
+    }else{
+        return Promise.reject(new Error('faile'))
+    }
    }
 }
 

@@ -70,12 +70,12 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" v-model="skuNum">
+                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum">
                 <a href="javascript:" class="plus" @click="skuNum++">+</a>
-                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum ++ : skuNum=1">-</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum -- : skuNum=1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="addShopCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -339,8 +339,7 @@
       }
     },
     mounted() {
-      //派发action获取产品详情信息
-      this.$store.dispatch('getGoodInfo',this.$route.params.skuid)
+      this.getDate()
     },
     computed:{
       ...mapGetters(['categoryView','skuInfo','spuSaleAttrList']),
@@ -351,11 +350,54 @@
       }
     },
     methods: {
+      getDate(){
+        //派发action获取产品详情信息
+      this.$store.dispatch('getGoodInfo',this.$route.params.skuid)
+      },
+      //产品售卖属性值切换高亮
       changeAttr(attrVal,arr){
         arr.forEach(item => {
           item.isChecked = 0
         })
         attrVal.isChecked = 1
+      },
+
+      //表单元素修改产品个数
+      changeSkuNum(e){
+        //使用户输入的文本*1来判断isNaN是不是数字
+        let value = e.target.value * 1
+        //如果用户输入进来的是非法，出现NaN或小于1
+        if (isNaN(value) || value < 1) {
+          this.skuNum = 1
+        }else{
+          //大于1整数
+          this.skuNum = parseInt(value)
+        }
+      },
+      
+      //加入购物车的回调函数
+      async addShopCart(){
+        //1：发请求--将产品加入到数据库(通知服务器)
+        //成功与失败
+        try {
+          await this.$store.dispatch('addOrUpdateShopCart',{skuId:this.$route.params.skuid,skuNum:this.skuNum})
+          //跳转路由
+          //这种方式路由跳转一级传参可以，但多余，注：一些简单的数据skuNum，通过query形式给路由组件传递过去
+          // this.$router.push({name:'AddCartSuccess',query:{skuInfo:this.skuInfo,skuNum:this.skuNum}})
+          //数据复杂的skuinfo用会话存储本地存储，一般只存字符串
+          // //多条数据存储
+          // let session = JSON.parse(localStorage.getItem('SKUINFO')) || []
+          // if (session) {
+          //   session.push(this.skuInfo)
+          //   localStorage.setItem('SKUINFO',JSON.stringify(session))
+          // }
+          sessionStorage.setItem('SKUINFO',JSON.stringify(this.skuInfo))
+          this.$router.push({name:'AddCartSuccess',query:{skuNum:this.skuNum}})
+        } catch (error) {
+          alert(error.message)
+        }
+        //2:服务器存储成功----进行路由跳转传递参数
+        //3:失败，给用户提示
       }
     },
     components: {
@@ -581,6 +623,7 @@
                   height: 36px;
                   line-height: 36px;
                   display: block;
+                  cursor: pointer;
                 }
               }
             }

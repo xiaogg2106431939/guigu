@@ -79,7 +79,8 @@
       top: 0;
       left: 0;
       z-index: 998;
-      cursor: crosshair;
+      // cursor: crosshair;
+      cursor: move;
     }
 
     .mask {

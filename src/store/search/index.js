@@ -15,7 +15,6 @@ const actions = {
         if (res.code == 200) {
             commit('GETSEARCHLIST',res.data)
         }
-        console.log(res);
     }
 }
 const getters = {

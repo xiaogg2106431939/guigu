@@ -37,6 +37,7 @@
         mounted() {
             //派发actions，获取父组件派发多个floor组件的数据
             this.$store.dispatch('getFloorList')
+            //获取用户信息再首页展示
         },
         computed:{
             ...mapState({

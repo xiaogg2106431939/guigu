@@ -5,15 +5,19 @@
         <div class="container">
             <div class="loginList">
                 <p>尚品汇欢迎您！</p>
-                <p>
+                <p v-if="!userName">
                     <span>请</span>
                     <router-link to="/login">登录</router-link>
                     <router-link to="/register" class="register">免费注册</router-link>
                 </p>
+                <p v-else>
+                    <a>{{userName}}</a>
+                    <a class="register" @click="loginOut">退出登录</a>
+                </p>
             </div>
             <div class="typeList">
-                <a href="###">我的订单</a>
-                <a href="###">我的购物车</a>
+                <router-link to="/center/myorder">我的订单</router-link>
+                <router-link to="/shopcart">我的购物车</router-link>
                 <a href="###">我的尚品汇</a>
                 <a href="###">尚品汇会员</a>
                 <a href="###">企业采购</a>
@@ -41,6 +45,13 @@
 </template>
 
 <script>
+    import SecureLS from "secure-ls"
+
+    var ls = new SecureLS({
+    encodingType: "aes",    //加密类型
+    isCompression: false,   //是否压缩
+    encryptionSecret: "TOKEN",   //PBKDF2值  加密秘密
+    })
     export default {
         data() {
             return {
@@ -62,6 +73,22 @@
                 location.query = this.$route.query
                 this.$router.push(location)
                }
+            },
+            loginOut(){
+                //退出登录需要做的事情
+                //1.需要发请求，通知服务器退出登录[清除一些数据：token]
+                //2.清除项目当中的数据[userInfo,token]
+                try {
+                    this.$store.dispatch('loginOut')
+                    this.$router.push('/login')
+                } catch (error) {
+                    alert('退出失败')
+                }
+            }
+        },
+        computed: {
+            userName(){
+                return this.$store.state.user.userInfo.name
             }
         },
     }

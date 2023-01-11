@@ -14,6 +14,8 @@ Vue.component(Carousel.name,Carousel)
 import Pagination from '@/components/Pagination'
 Vue.component(Pagination.name,Pagination)
 
+//统一引接口api文件里面全部请求函数
+import * as API from '@/api'
 
 //引入MockServer.js----mock数据,至少让它执行一次
 import "@/mock/mockServe"
@@ -21,11 +23,27 @@ import "@/mock/mockServe"
 //引入swiper8样式
 import 'swiper/swiper-bundle.min.css'
 
+import { Button, MessageBox } from 'element-ui'
+
+Vue.component(Button.name, Button)
+//挂载原型链上
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+
+
+import VueLazyload from 'vue-lazyload'
+import loading from '@/assets/logo.png'
+Vue.use(VueLazyload, {
+  loading: loading
+})
+
 Vue.config.productionTip = false
 
 new Vue({
   beforeCreate() {
     Vue.prototype.$bus = this
+    //全局
+    Vue.prototype.$api = API
   },
   router,
   store,
